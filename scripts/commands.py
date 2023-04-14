@@ -11,6 +11,7 @@ from execute_code import execute_python_file, execute_shell
 from json_parser import fix_and_parse_json
 from image_gen import generate_image
 from duckduckgo_search import ddg
+from web3_rpc import rpc_request
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
@@ -115,6 +116,11 @@ def execute_command(command_name, arguments):
             return "No action performed."
         elif command_name == "task_complete":
             shutdown()
+        elif command_name == "rpc_request":
+            if cfg.infura_url and cfg.etherscan_key:
+                return rpc_request(arguments["address"], arguments["chain_id"], arguments["rpc_method"], arguments["rpc_method_args"])
+            else:
+                return "INFURA_URL and ETHERSCAN_URL not set"
         else:
             return f"Unknown command '{command_name}'. Please refer to the 'COMMANDS' list for available commands and only respond in the specified JSON format."
     # All errors, return "Error: + error message"
